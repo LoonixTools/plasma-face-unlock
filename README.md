@@ -69,8 +69,9 @@ sudo apt update && sudo apt install face-unlock
 
 - **KDE Plasma:** works out of the box.
 - **GNOME:** log out and back in once after installing.
-- **Hyprland and Niri:** the bubble only shows on face-unlock's own lock screen. If you want to keep your lockscreen it will show a text on the top of the screen. You
-  also need a polkit agent. If none runs, the menu offers to install one.
+- **Hyprland and Niri:** the bubble only shows on face-unlock's own lock screen.
+  hyprlock shows a line of text at the top instead. You also need a polkit
+  agent. If none runs, the menu offers to install one.
 
 <details>
 <summary>Hyprland and Niri: which lock screen?</summary>
@@ -86,7 +87,6 @@ can change it later under **Settings**.
   `face-unlock lock`, and the menu shows where to put that.
 - **Yours** (hyprlock, swaylock, gtklock or waylock): press Enter on the empty
   password field to scan. hyprlock and swaylock also scan when you come back.
-  There is no bubble, but hyprlock shows a line of text at the top.
 
 Hyprland without uwsm needs a line in its config. The menu shows it.
 
