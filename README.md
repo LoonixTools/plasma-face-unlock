@@ -115,14 +115,15 @@ Press **1** and look at the camera. Then lock the screen and look at it.
 
 ## Is it safe?
 
-It is a convenience, not extra security. A webcam only sees a flat picture, so
-it cannot always tell your face from a good copy of it.
+It is a convenience upgrade, not extra security. Your webcam only sees a flat picture, so
+it cannot always differentiate your face from a good fake. But the tool does everything in it's power to prevent that:
 
 - Photos and videos on a phone, tablet or glossy screen are caught.
-- A matte printed photo is only caught with the photo check set to *strict*.
-- A video of you on a big matte screen can get in.
+- A matte printed photo is caught when the photo check set to *strict*.
+  
+But a video of you on a big matte screen could get in.
 
-After five failed tries, face unlock pauses for 15 minutes. Your face is kept as
+After five failed attempts, face unlock pauses for 15 minutes. Your face is kept as
 numbers, not pictures, and only root can read them. sudo over SSH always asks
 for the password.
 
