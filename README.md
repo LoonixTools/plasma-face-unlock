@@ -115,16 +115,16 @@ Press **1** and look at the camera. Then lock the screen and look at it.
 
 ## Is it safe?
 
-A convenience, not extra security. A webcam only sees a flat picture.
+It is a convenience, not extra security. A webcam only sees a flat picture, so
+it cannot always tell your face from a good copy of it.
 
-| | |
-|---|---|
-| Photo or video on a phone, tablet or glossy screen | ✅ Stopped |
-| Matte printed photo | ⚠️ Only stopped with photo check *strict* |
-| Video of you on a big matte screen | ❌ Can get in |
-| Five failed tries | ⏸️ Paused for 15 minutes |
-| Your face data | 🔒 Numbers, no pictures. Root only. |
-| sudo over SSH | 🚫 Never unlocked by a face |
+- Photos and videos on a phone, tablet or glossy screen are caught.
+- A matte printed photo is only caught with the photo check set to *strict*.
+- A video of you on a big matte screen can get in.
+
+After five failed tries, face unlock pauses for 15 minutes. Your face is kept as
+numbers, not pictures, and only root can read them. sudo over SSH always asks
+for the password.
 
 ## More
 
