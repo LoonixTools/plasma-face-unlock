@@ -134,16 +134,6 @@ for locking before sleep.
 
 </details>
 
-<details>
-<summary>Coming from plasma-face-unlock?</summary>
-
-This is the same program with a new name. Your faces and settings move over
-on their own. On Debian, Ubuntu and Fedora the repository moved too: remove the
-old `plasma-face-unlock` repository file and add the new one above. On Arch,
-`yay -S face-unlock` replaces the old package.
-
-</details>
-
 ## How to use
 
 ```bash
