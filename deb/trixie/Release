@@ -1,23 +1,23 @@
 Architectures: amd64
 Codename: trixie
 Components: main
-Date: Wed, 23 Sep 2026 23:46:21 +0000
-Label: plasma-face-unlock
-Origin: plasma-face-unlock
+Date: Sat, 26 Sep 2026 19:23:44 +0000
+Label: face-unlock
+Origin: face-unlock
 Suite: trixie
 MD5Sum:
- b2ca2886f8ab895cd6a5d95381b511a4             4553 Packages
- 5cb8683b6f55a457acae10e50a36324b             1419 Packages.gz
- 6076322ca260bcbc69d3ae76236fedba              160 Release
+ 8e871a1493ce74df2823433f568f1d21             7043 Packages
+ 6d6767482f093f4bb67ba3de5de2b0ee             1712 Packages.gz
+ 66690eb37ae8d7729954a0309701e6c4              146 Release
 SHA1:
- fb4ca3c5061352c726eb8706acbf9fddc10aafa8             4553 Packages
- b153ba3b2d9010903dfbc6e84c0e8cf3e0baf2ba             1419 Packages.gz
- 67ccd7b23c70afecda25c6b683aaa9a25cfc9771              160 Release
+ 3f422faec64c72ad8d51067fc6f101d731750e1f             7043 Packages
+ db1becce45c31ae9ec8919dc5325ddf66e1acb94             1712 Packages.gz
+ 8f845e4258902d79a8d76f205bc64f54223554e9              146 Release
 SHA256:
- 8c9ad2ec2c7d580cfb14b7c4b75838ebf83821787f4b1729902c84c47727fb00             4553 Packages
- 0f8d151548b21254ceb2b7187bdfbfaf0fc8cff297cebd06de48578e1fd5d527             1419 Packages.gz
- 38f25e880ed5439e2aec675ffbd854c23f45491f02dea694e3896136c6262e4b              160 Release
+ b7c222562dd5f10024d0cd1848e332ff359d99d08133d2b3489b49b917657628             7043 Packages
+ 26bc552580f3acc345a2938a180eecab2abcf4bbce0220732cbe394035247e0a             1712 Packages.gz
+ f7e7f5930fe98dc65c71a7a8c537c7207fe5b6f9acb84d9f9982086e46912a9b              146 Release
 SHA512:
- ba14fbd3a33c11f4d2afa8d8e256a352be04fa3919c57aa0e35b6b71aad99e748b528764e13a23985ba96aa66c00de2b467e1bfa95df37473fd488ec2c70037e             4553 Packages
- 8eca167ef24f027b2d2713c298cc3c66bd2359ac00f7764fbc4cefef646e95911fe51560450da6489ccc3cdcbe3c026288e3ec5bc204d9c9078edba9c540d08c             1419 Packages.gz
- 8b1c343be125db67d9d9a02792dbabf47a60a8ffcbf67996ac0cc4251b2db601bfc8314956d9e96d6c64331f76ee7ee49677e54c2e562e15f02d521c5b045843              160 Release
+ d73f449ff78cbd87454c71baa7bd01670445fd76556bf6a6721e998df87715aada4e2aa20d8ccdb03ed33a97fda5a927efd77d1f1065983f1997b9d5fd2629f0             7043 Packages
+ cd405056546864a5f5d5cb9c1b287c3070234af9a67847aac000fab0ef6bfe74ee12136c04d6bcea461edd3e1624955f75eea6c27a0874044a4766439495ed9c             1712 Packages.gz
+ 9037e8dd400f8b7ec425b6d7d7f5ce8d72d95b2604bd1ba47986287437def60a97d3d742137a694232b42b44c2f68c818b9dc023f9ff14c0b4d6303a05de9d18              146 Release

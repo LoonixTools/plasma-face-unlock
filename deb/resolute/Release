@@ -1,23 +1,23 @@
 Architectures: amd64
 Codename: resolute
 Components: main
-Date: Wed, 23 Sep 2026 23:46:21 +0000
-Label: plasma-face-unlock
-Origin: plasma-face-unlock
+Date: Sat, 26 Sep 2026 19:23:45 +0000
+Label: face-unlock
+Origin: face-unlock
 Suite: resolute
 MD5Sum:
- 0851d171c7d446e19fc14063746fdb20             4589 Packages
- 039ae611173eac34a026ba8ab848dd0f             1426 Packages.gz
- f0884dc8ea242ec7b621b8c44badb56c              164 Release
+ 507c4a917a2a59f4a3de46a5868e0afe             7056 Packages
+ d94d5ef584ed46c0630cca69b0daa817             1715 Packages.gz
+ b99f2902d26e0cb45704318a4be7a3f8              150 Release
 SHA1:
- c11a12bb5bf7c95dd0e3970c19a56dab3edb34cc             4589 Packages
- 57a2e980442b6dfc711d13677fc658ecf70a3ca7             1426 Packages.gz
- 6f82f4afc80c713c94b6dfa9cb5a7f58f84c97fc              164 Release
+ 3312aa79db0abde3eaa3734b5d848f6ca53cdb22             7056 Packages
+ 1d8da1035c3ffc33261815a704fd134bc1be3342             1715 Packages.gz
+ 06bd4b08ca6793ed7f4ec98a007205129b92dc50              150 Release
 SHA256:
- f6b22e98f85a764f8fdcf83e4e27b50725ac59ab10592f0f2c69e97fd31f9662             4589 Packages
- 9b8e93c5735f35c1cb5562281d4684b8f736ce2bd9f3e70b089be288b9698c5e             1426 Packages.gz
- 000a207522fd9dd5131f297fd1802505f7563fc28ac57d1b65b0adc31c724c88              164 Release
+ 2ece6ed66e0697643e3415f3642e6e6706615ab94fc396afa36eef679c46ecc0             7056 Packages
+ e16f6bd2ae3440b00299d4c6be524de9fe43e5df3cb26da028f310dc8f4b2308             1715 Packages.gz
+ 4ac609c02f48a1d351ff89d652739e2420382e68cd5eaa4b958ab4f678a17f0d              150 Release
 SHA512:
- 9d88bd25776071cf9eafda880b90203afa28806292dc45629ede6fe065c4d23177047147e8bb3bc0df76709162fd085c4b301ae61280ad5d74c2bcd6fbe6f486             4589 Packages
- 6e2ed5a6dea75e9b56ebcf82e58ff01e4a9aa36201d41f6692ab6ab34e32425fd2167f2802876535ee7fd07c8c7f77338d1ae455b7ee953b1953d83e2314a162             1426 Packages.gz
- ed8caf0bf2d741fc3250aa7bc85814896f5c259208a58f9b7c988c9530c40066b87842a9318d2e14f23abe498697536ef8cacf26d4c7e8d57b83fb9f1e1b022d              164 Release
+ f2e1c8322825a7ae24014caecc8669ea56871682d6d854962a97cce41d9d6e27f9657129982194ab1f627ade0b4f7ca4219692063bb9834fa85b2f7c332c70bd             7056 Packages
+ 00178c9efcb3c8da626ce8e6d3948e26738a5c1425e219c257d4413dc3a597bc712a477811993f8efc26478347db8f4168c72bc7fd5e6783f3e30e735b9c5630             1715 Packages.gz
+ fe03960bd67d8b5166ea70d95a4bd10d67e6838c204991ee51eb4b18412529764f2b59f114363976a1d8f23d7a2bc6b67a019109d4feff739241aff8d02f0916              150 Release
