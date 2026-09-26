@@ -116,11 +116,11 @@ Press **1** and look at the camera. Then lock the screen and look at it.
 ## Is it safe?
 
 It is a convenience upgrade, not extra security. Your webcam only sees a flat picture, so
-it cannot always differentiate your face from a good fake. But the tool does everything in it's power to prevent that:
+it cannot always differentiate your face from a good fake. But the tool does everything in its power to prevent that:
 
 - Photos and videos on a phone, tablet or glossy screen are caught.
-- A matte printed photo is caught when the photo check set to *strict*.
-  
+- A matte printed photo is caught when the photo check is set to *strict*.
+
 But a video of you on a big matte screen could get in.
 
 After five failed attempts, face unlock pauses for 15 minutes. Your face is kept as
