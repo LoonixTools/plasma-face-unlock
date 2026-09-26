@@ -70,67 +70,33 @@ sudo apt update && sudo apt install face-unlock
 Updates come with your system updates. It needs a camera and one of these
 desktops, on Wayland:
 
-| | Lock screen | sudo and admin prompts | Bubble |
+| | Lock screen | sudo and admin prompts | Bubble on the lock screen |
 |---|---|---|---|
-| KDE Plasma 6 | ✅ | ✅ | ✅ above the lock screen too |
-| GNOME | ✅ | ✅ | ✅ above the lock screen too |
-| Hyprland | ✅ hyprlock, swaylock, gtklock, waylock, or face-unlock's own | ✅ | ✅ on face-unlock's own lock screen too, as a line of text in hyprlock |
-| Niri | ✅ swaylock, hyprlock, gtklock, waylock, or face-unlock's own | ✅ | ✅ on face-unlock's own lock screen too, as a line of text in hyprlock |
+| KDE Plasma 6 | ✅ | ✅ | ✅ |
+| GNOME | ✅ | ✅ | ✅ |
+| Hyprland | ✅ | ✅ | ✅ on face-unlock's own |
+| Niri | ✅ | ✅ | ✅ on face-unlock's own |
 
-On GNOME a small GNOME extension draws the bubble. Turning face unlock on
-switches it on; right after installing, log out and back in once.
+- **GNOME:** log out and back in once after installing, so the bubble can show.
+- **Hyprland and Niri:** you need a polkit agent, for example hyprpolkitagent.
 
-On Hyprland and Niri the lock screen is a program of your choice. When you
-turn face unlock on, a window shows your screen both ways and asks which you
-want: face-unlock's lock screen with your wallpaper, or yours, rebuilt from its
-config. You can change it later under **Settings**.
+<details>
+<summary>Hyprland and Niri: which lock screen?</summary>
 
 <p align="center">
   <img src="res/screenshots/lock-choice.png" alt="The window that asks which lock screen to use: face-unlock's with the bubble on the left, the user's own hyprlock with a line of text at the top on the right" width="560">
 </p>
 
-- **face-unlock's lock screen**, with the bubble, the time and the wallpaper of
-  your desktop (from swaybg, awww, hyprpaper or wpaperd). You lock with
-  `face-unlock lock`, and the menu shows where to put that. Under **Settings**
-  you can pick a picture instead, or a folder to take one from at random,
-  blurred if you like.
-- **Keep your lock screen.** Only it can open itself, so face-unlock goes into
-  its password check, as with sudo: press Enter on the empty password field to
-  scan. hyprlock and swaylock also scan by themselves when you come back, and
-  so does gtklock after 4.0.0 (the first to open from outside). They cover the
-  bubble, but hyprlock shows what face unlock is doing as a line of text at the
-  top (face-unlock adds that line to your `hyprlock.conf`), and gtklock shows
-  its messages. swaylock and waylock have no way to show them.
+When you turn face unlock on, a window asks which lock screen you want. You
+can change it later under **Settings**.
 
-Admin prompts and setting up a face need a polkit agent there (for example
-hyprpolkitagent). Hyprland without uwsm does not start the part that watches
-the lock screen by itself: the menu shows what to add to its config.
+- **face-unlock's own:** the bubble, the time and your wallpaper. You lock with
+  `face-unlock lock`, and the menu shows where to put that.
+- **Yours** (hyprlock, swaylock, gtklock or waylock): press Enter on the empty
+  password field to scan. hyprlock and swaylock also scan when you come back.
+  There is no bubble, but hyprlock shows a line of text at the top.
 
-<details>
-<summary>Hyprland and Niri: face-unlock's lock screen on a key</summary>
-
-`~/.config/hypr/hyprland.conf`, and `lock_cmd` in `hypridle.conf`:
-
-```ini
-bind = SUPER, L, exec, face-unlock lock
-```
-
-`~/.config/hypr/hyprland.lua` (Hyprland 0.56 and newer):
-
-```lua
-hl.bind("SUPER + L", hl.dsp.exec_cmd("face-unlock lock"))
-```
-
-`~/.config/niri/config.kdl`, and `face-unlock lock` in swayidle:
-
-```kdl
-binds {
-    Mod+Alt+L { spawn "face-unlock" "lock"; }
-}
-```
-
-`face-unlock lock` returns as soon as the screen is locked, so it also works
-for locking before sleep.
+Hyprland without uwsm needs a line in its config. The menu shows it.
 
 </details>
 
