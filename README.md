@@ -78,7 +78,7 @@ desktops, on Wayland:
 | Niri | ✅ | ✅ | ✅ on face-unlock's own |
 
 - **GNOME:** log out and back in once after installing, so the bubble can show.
-- **Hyprland and Niri:** you need a polkit agent, for example hyprpolkitagent.
+- **Hyprland and Niri:** you need a polkit agent. The menu installs one if it is missing.
 
 <details>
 <summary>Hyprland and Niri: which lock screen?</summary>

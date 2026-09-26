@@ -210,6 +210,11 @@ fu_value_label() {
 # Status
 # ---------------------------------------------------------------------------
 
+_fu_polkit_warning() {
+	fu_polkit_agent_missing || return 0
+	printf '\n  %s%s%s\n' "$FU_C_YELLOW" "$(fu_msg "No polkit agent is running, so no password window can open. Adding a face and the admin prompts need one.")" "$FU_C_RESET"
+}
+
 # fu_ui_status
 # Shared by the `status` subcommand and the menu header.
 fu_ui_status() {
@@ -226,6 +231,7 @@ fu_ui_status() {
 		if [[ $CFG_ENABLED == yes ]]; then
 			printf '\n  %s%s%s\n' "$FU_C_DIM" "$(fu_msg "Turning face unlock on again starts it.")" "$FU_C_RESET"
 		fi
+		_fu_polkit_warning
 		return 0
 	fi
 
@@ -268,8 +274,12 @@ fu_ui_status() {
 	fi
 	if [[ $agent == no ]]; then
 		printf '\n  %s%s%s\n' "$FU_C_YELLOW" "$(fu_msg "The lock screen agent is not running.")" "$FU_C_RESET"
+		# Printed here already, so not again under the menu.
+		local -a notices=("${FU_UI_NOTICES[@]}")
 		fu_agent_autostarts || fu_agent_hint
+		FU_UI_NOTICES=("${notices[@]}")
 	fi
+	_fu_polkit_warning
 }
 
 # ---------------------------------------------------------------------------
@@ -770,6 +780,9 @@ fu_ui_menu() {
 		printf '  [3] %s\n' "$(fu_msg "Faces")"
 		printf '  [4] %s\n' "$(fu_msg "Settings")"
 		printf '  [5] %s\n' "$(fu_msg "Try it")"
+		if fu_polkit_agent_missing; then
+			printf '  %s[p] %s%s\n' "$FU_C_YELLOW" "$(fu_msg "Install a polkit agent")" "$FU_C_RESET"
+		fi
 		printf '  [q] %s\n' "$(fu_msg "Quit")"
 		_fu_ui_take_notices
 		printf '%s' "$FU_UI_NOTICE_TEXT"
@@ -802,6 +815,7 @@ fu_ui_menu() {
 				FU_UI_NOTICES=()
 				keep=1
 				;;
+			p|P) fu_polkit_agent_missing && fu_ui_cooked fu_polkit_agent_fix ;;
 			q|Q) fu_ui_term_restore; trap - EXIT INT TERM; return 0 ;;
 			# Anything else (Enter, arrow keys, stray characters) just
 			# redraws. Escape is deliberately not a quit key, so a mistyped

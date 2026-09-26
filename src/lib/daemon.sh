@@ -112,7 +112,14 @@ fu_reason_text() {
 		lid-closed)   fu_msg "The lid is closed." ;;
 		busy)         fu_msg "The camera is busy with another scan." ;;
 		unreachable)  fu_msg "The face unlock service is not running." ;;
-		denied)       fu_msg "Not allowed." ;;
+		denied)
+			fu_msg "Not allowed."
+			# Hyprland, Niri and the like bring no polkit agent, so no password window shows.
+			if [[ $FU_DESKTOP != plasma && $FU_DESKTOP != gnome ]]; then
+				printf ' '
+				fu_msg "No password window? Start a polkit agent, for example hyprpolkitagent."
+			fi
+			;;
 		*)            fu_msg "Something went wrong (%s)." "$1" ;;
 	esac
 	printf '\n'

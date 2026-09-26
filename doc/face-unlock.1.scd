@@ -273,7 +273,9 @@ so does the bubble, above the lock screen too.
 	*enable* and *status* show what to add to its config.
 
 Hyprland and Niri come without a polkit agent. One has to run for admin
-prompts and for setting up a face, for example hyprpolkitagent.
+prompts and for setting up a face, for example hyprpolkitagent. The menu warns
+when none runs, and *p* installs one: hyprpolkitagent where the distribution
+has it, else KDE's agent. It starts it too, now and with the session.
 
 # SUDO, ADMIN PROMPTS AND LOCK SCREENS
 

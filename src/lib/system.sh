@@ -14,6 +14,7 @@
 #   --root socket-enable         start the daemon's socket, and at boot
 #   --root socket-disable
 #   --root migrate               move over from plasma-face-unlock, see migrate.sh
+#   --root polkit-agent-install  install a polkit agent, see fu_polkit_agent_install
 
 FU_SELF="${FU_SELF:-$(readlink -f "${BASH_SOURCE[1]:-$0}")}"
 
@@ -97,6 +98,9 @@ fu_root_verb() {
 		migrate)
 			fu_migrate_system
 			;;
+		polkit-agent-install)
+			fu_polkit_agent_install
+			;;
 		*)
 			fu_bad "$(fu_msg "Unknown command: %s" "$verb")"
 			return 1
@@ -137,20 +141,125 @@ fu_agent_autostarts() {
 	[[ $FU_DESKTOP != hyprland ]] || systemctl --user is-active --quiet graphical-session.target
 }
 
-# fu_agent_hint
-# What to add to Hyprland's config, in the Lua it has since 0.56 or in the
-# older format.
+# fu_agent_hint [unit]
+# What to add to Hyprland's config so it starts the lock screen agent, or the
+# polkit agent's unit, in the Lua it has since 0.56 or in the older format.
 fu_agent_hint() {
+	local unit="${1:-$FU_UNIT_AGENT}"
 	# shellcheck disable=SC2088  # shown to the user, not a path to open
-	if [[ -f $FU_XDG_CONFIG/hypr/hyprland.lua ]]; then
-		fu_note "$(fu_msg "Hyprland does not start the lock screen agent by itself. Add this to %s:" "~/.config/hypr/hyprland.lua")"
-		fu_say "    hl.on(\"hyprland.start\", function ()"
-		fu_say "      hl.exec_cmd(\"systemctl --user start $FU_UNIT_AGENT\")"
-		fu_say "    end)"
+	local conf="~/.config/hypr/hyprland.conf"
+	# shellcheck disable=SC2088
+	[[ -f $FU_XDG_CONFIG/hypr/hyprland.lua ]] && conf="~/.config/hypr/hyprland.lua"
+	if [[ $unit == "$FU_UNIT_AGENT" ]]; then
+		fu_note "$(fu_msg "Hyprland does not start the lock screen agent by itself. Add this to %s:" "$conf")"
 	else
-		fu_note "$(fu_msg "Hyprland does not start the lock screen agent by itself. Add this to %s:" "~/.config/hypr/hyprland.conf")"
-		fu_say "    exec-once = systemctl --user start $FU_UNIT_AGENT"
+		fu_note "$(fu_msg "Hyprland does not start the polkit agent by itself. Add this to %s:" "$conf")"
 	fi
+	if [[ $conf == *.lua ]]; then
+		fu_code "hl.on(\"hyprland.start\", function ()"
+		fu_code "  hl.exec_cmd(\"systemctl --user start $unit\")"
+		fu_code "end)"
+	else
+		fu_code "exec-once = systemctl --user start $unit"
+	fi
+}
+
+# ---------------------------------------------------------------------------
+# The polkit agent
+# ---------------------------------------------------------------------------
+# polkit asks for the password in a window of the session's polkit agent: to
+# add a face, and in the admin prompts. Plasma and GNOME bring one, Hyprland
+# and Niri do not. Without one no window opens, and polkit just says no.
+
+FU_POLKIT_AGENT_MISSING=''
+
+# fu_polkit_agent_missing
+# Whether no polkit agent runs in this session. polkit has no call to ask
+# that, so this tries to register an agent of its own: polkit refuses it when
+# there is one. When it is let in, busctl ends at once, and polkit drops it
+# again. Any other answer counts as not missing, so nobody is warned wrongly.
+# Asked once per run.
+fu_polkit_agent_missing() {
+	local session
+	if [[ -z $FU_POLKIT_AGENT_MISSING ]]; then
+		FU_POLKIT_AGENT_MISSING=no
+		if [[ $FU_DESKTOP != plasma && $FU_DESKTOP != gnome && -n ${WAYLAND_DISPLAY:-} ]] && fu_have busctl; then
+			session="${XDG_SESSION_ID:-$(loginctl show-user "$UID" -p Display --value 2> /dev/null)}"
+			if [[ -n $session ]] && busctl call --system org.freedesktop.PolicyKit1 \
+				/org/freedesktop/PolicyKit1/Authority org.freedesktop.PolicyKit1.Authority \
+				RegisterAuthenticationAgent '(sa{sv})ss' unix-session 1 session-id s "$session" \
+				C /io/github/loonixtools/FaceUnlock/Probe > /dev/null 2>&1; then
+				FU_POLKIT_AGENT_MISSING=yes
+			fi
+		fi
+	fi
+	[[ $FU_POLKIT_AGENT_MISSING == yes ]]
+}
+
+# fu_polkit_agent_install
+# Root side. hyprpolkitagent where the distribution has it, else KDE's agent,
+# which runs anywhere and which niri suggests. The package manager shows what
+# it installs and asks.
+fu_polkit_agent_install() {
+	if fu_have pacman; then
+		pacman -Si hyprpolkitagent > /dev/null 2>&1 && { pacman -S --needed hyprpolkitagent; return; }
+		pacman -S --needed polkit-kde-agent
+	elif fu_have dnf; then
+		dnf -q info hyprpolkitagent > /dev/null 2>&1 && { dnf install hyprpolkitagent; return; }
+		dnf install polkit-kde
+	elif fu_have apt-get; then
+		apt-cache show hyprpolkitagent > /dev/null 2>&1 && { apt-get install hyprpolkitagent; return; }
+		apt-get install polkit-kde-agent-1
+	else
+		fu_bad "$(fu_msg "No package manager found to install a polkit agent with.")"
+		return 1
+	fi
+}
+
+# _fu_polkit_agent_unit
+# The user service of the polkit agent that is installed, if any.
+_fu_polkit_agent_unit() {
+	local unit
+	for unit in hyprpolkitagent.service plasma-polkit-agent.service; do
+		if systemctl --user list-unit-files --quiet "$unit" > /dev/null 2>&1; then
+			printf '%s\n' "$unit"
+			return 0
+		fi
+	done
+	return 1
+}
+
+# fu_polkit_agent_fix
+# Installs a polkit agent if there is none, and starts it now and with the
+# session.
+fu_polkit_agent_fix() {
+	local unit
+	if ! unit="$(_fu_polkit_agent_unit)"; then
+		fu_say "  $(fu_msg "Installing a polkit agent. That needs your password.")"
+		fu_root polkit-agent-install || { fu_bad "$(fu_msg "Could not install a polkit agent.")"; return 1; }
+		systemctl --user daemon-reload > /dev/null 2>&1 || true
+		unit="$(_fu_polkit_agent_unit)" || { fu_bad "$(fu_msg "Could not install a polkit agent.")"; return 1; }
+	fi
+
+	if [[ $unit == plasma-polkit-agent.service ]]; then
+		# KDE's has no [Install] section, and outside Plasma nothing makes it
+		# wait for the desktop: it would start before there is one.
+		local dropin="$FU_XDG_CONFIG/systemd/user/$unit.d"
+		mkdir -p "$dropin" && printf '# Written by %s.\n[Unit]\nAfter=graphical-session.target\n' "$FU_NAME" > "$dropin/$FU_NAME.conf"
+		systemctl --user daemon-reload > /dev/null 2>&1 || true
+		systemctl --user add-wants graphical-session.target "$unit" > /dev/null 2>&1
+		systemctl --user start "$unit" > /dev/null 2>&1
+	else
+		systemctl --user enable --now "$unit" > /dev/null 2>&1
+	fi
+
+	if ! systemctl --user is-active --quiet "$unit"; then
+		fu_bad "$(fu_msg "The polkit agent did not start. See: systemctl --user status %s" "$unit")"
+		return 1
+	fi
+	FU_POLKIT_AGENT_MISSING=no
+	fu_ok "$(fu_msg "The polkit agent is running. Password windows open now.")"
+	fu_agent_autostarts || fu_agent_hint "$unit"
 }
 
 # ---------------------------------------------------------------------------

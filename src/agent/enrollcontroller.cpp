@@ -191,6 +191,11 @@ void EnrollController::onFinished(const QJsonObject &result)
     }
     if (reason == u"denied") {
         m_error = i18n("A face can only be added with your password.");
+        // Hyprland, Niri and the like bring no polkit agent, so no password window shows.
+        const QStringList desktops = qEnvironmentVariable("XDG_CURRENT_DESKTOP").split(u':');
+        if (!desktops.contains(u"KDE") && !desktops.contains(u"GNOME")) {
+            m_error += u' ' + i18n("No password window? Start a polkit agent, for example hyprpolkitagent.");
+        }
     } else if (reason == u"camera") {
         m_error = i18n("The camera could not be used: %1", result.value(u"message").toString());
     } else if (reason == u"models") {
