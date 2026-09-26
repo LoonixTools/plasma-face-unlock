@@ -267,7 +267,8 @@ so does the bubble, above the lock screen too.
 	picture there, one at random from a folder, or _none_; *Blur the
 	wallpaper* blurs it. If the agent dies while this screen is locked, the
 	compositor keeps it locked, and the agent takes the lock back when it
-	starts again.
+	starts again. It needs Qt 6.10 or newer: with older Qt (Debian 13) the
+	menu does not offer it, and *lock* asks logind to lock.
 
 	Hyprland only starts the agent's user service under uwsm. Without it,
 	*enable* and *status* show what to add to its config.

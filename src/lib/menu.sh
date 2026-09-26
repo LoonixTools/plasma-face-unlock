@@ -562,7 +562,7 @@ fu_ui_settings() {
 	for spec in "${FU_SETTINGS[@]}"; do
 		IFS='|' read -r scope key type default label choice need only <<< "$spec"
 		[[ $only == lockers ]] && ! fu_pam_lockers_here && continue
-		[[ $only == ownlock && ( $FU_DESKTOP == plasma || $FU_DESKTOP == gnome ) ]] && continue
+		[[ $only == ownlock ]] && ! fu_own_lock_here && continue
 		# A heading has its label where the key would be.
 		[[ $scope == group ]] && label="$key" key=''
 		scopes+=("$scope"); keys+=("$key"); types+=("$type"); defaults+=("$default")

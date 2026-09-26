@@ -126,10 +126,15 @@ fu_do_enable() {
 			;;
 	esac
 	# Where the lock screen is a program of its own: face-unlock's, with the
-	# bubble, or that program with a line of text. Asked once.
-	if fu_own_lock_here && [[ -n ${WAYLAND_DISPLAY:-} && -z $(fu_config_get LockScreenStyle) ]]; then
-		fu_say "  $(fu_msg "Pick your lock screen in the window.")"
-		fu_lock_choose || fu_note "$(fu_msg "No lock screen picked. You can do it later under Settings.")"
+	# bubble, or that program with a line of text. Asked once. Without
+	# face-unlock's own (older Qt) there is nothing to ask.
+	if [[ $FU_DESKTOP != plasma && $FU_DESKTOP != gnome && -z $(fu_config_get LockScreenStyle) ]]; then
+		if ! fu_own_lock_here; then
+			fu_lock_style_set yours
+		elif [[ -n ${WAYLAND_DISPLAY:-} ]]; then
+			fu_say "  $(fu_msg "Pick your lock screen in the window.")"
+			fu_lock_choose || fu_note "$(fu_msg "No lock screen picked. You can do it later under Settings.")"
+		fi
 	fi
 	if fu_pam_lockers_here && fu_pam_lockers_enabled && [[ $(fu_config_get LockScreenStyle) != own ]]; then
 		fu_note "$(fu_msg "The lock screen (%s) takes your face too. If it does not scan when you come back, press Enter on the empty password field." "$(fu_pam_lockers_list)")"

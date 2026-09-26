@@ -313,8 +313,18 @@ fu_gnome_extension_disable() {
 FU_HYPRLOCK_SNIPPET="$FU_XDG_CONFIG/$FU_NAME/hyprlock.conf"
 FU_HYPRLOCK_MARK="# $FU_NAME: what face unlock is doing, at the top"
 
+# fu_own_lock_here
+# Whether face-unlock's own lock screen is on offer: where the lock screen is
+# a program of its own, and the agent was built with it (Qt 6.10 and newer).
+FU_OWN_LOCK=''
+
 fu_own_lock_here() {
-	[[ $FU_DESKTOP != plasma && $FU_DESKTOP != gnome ]]
+	[[ $FU_DESKTOP != plasma && $FU_DESKTOP != gnome ]] || return 1
+	if [[ -z $FU_OWN_LOCK ]]; then
+		FU_OWN_LOCK=no
+		"$FU_AGENT" --has-own-lock > /dev/null 2>&1 && FU_OWN_LOCK=yes
+	fi
+	[[ $FU_OWN_LOCK == yes ]]
 }
 
 # fu_hyprlock_text_on

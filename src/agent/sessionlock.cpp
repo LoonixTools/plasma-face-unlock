@@ -64,12 +64,15 @@ public:
     {
         return m_configured;
     }
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
     // Qt commits a new role at once, as xdg-shell wants. A lock surface must
-    // not be committed before it has acknowledged its first size.
+    // not be committed before it has acknowledged its first size. Older Qt
+    // cannot be stopped from that (see SessionLock::built).
     bool commitSurfaceRole() const override
     {
         return false;
     }
+#endif
     void applyConfigure() override
     {
         window()->resizeFromApplyConfigure(m_size);
@@ -83,7 +86,11 @@ protected:
         if (!m_configured) {
             m_configured = true;
             applyConfigure();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
             window()->updateExposure();
+#else
+            window()->sendRecursiveExposeEvent();
+#endif
         } else {
             window()->applyConfigureWhenPossible();
         }
@@ -151,7 +158,7 @@ SessionLock::~SessionLock()
 
 bool SessionLock::available()
 {
-    return Wayland::hasGlobal("ext_session_lock_manager_v1");
+    return built && Wayland::hasGlobal("ext_session_lock_manager_v1");
 }
 
 QString SessionLock::markerPath()

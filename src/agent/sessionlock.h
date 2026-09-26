@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QPointer>
 #include <QUrl>
+#include <QtGlobal>
 
 class BubbleController;
 class LockScreenController;
@@ -37,7 +38,12 @@ public:
     SessionLock(QQmlEngine *engine, BubbleController *bubble, LockScreenController *screen, UserConfig *config, QObject *parent = nullptr);
     ~SessionLock() override;
 
-    // Whether the compositor offers ext-session-lock.
+    // Whether this build has it. Qt before 6.10 commits a window's surface
+    // before a lock surface may be committed, which the protocol forbids.
+    static constexpr bool built = QT_VERSION >= QT_VERSION_CHECK(6, 10, 0);
+
+    // Whether it can lock here: built, and the compositor offers
+    // ext-session-lock.
     static bool available();
 
     // From the lock request until the lock is gone again.

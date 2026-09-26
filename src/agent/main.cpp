@@ -13,6 +13,8 @@
 //   --choose-lock-screen
 //                    open the window that asks which lock screen to use
 //                    where it is a program of its own, and print the answer
+//   --has-own-lock   for the menu: exits 0 when this build has face-unlock's
+//                    own lock screen (see SessionLock::built)
 
 #include "agentsocket.h"
 #include "bubblecontroller.h"
@@ -233,6 +235,9 @@ void scheduleDemo(BubbleController *bubble)
 
 int main(int argc, char **argv)
 {
+    if (argc == 2 && std::strcmp(argv[1], "--has-own-lock") == 0) {
+        return SessionLock::built ? 0 : 1;
+    }
     forkForLock(argc, argv);
     QGuiApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("face-unlock-agent"));
