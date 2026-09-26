@@ -166,6 +166,10 @@ FU_SYSCONFIG="$tmp/new-etc/config"
 FU_SYSTEMD_ETC="$tmp/systemd"
 old_module=/usr/lib/security/pam_plasma_face_unlock.so
 
+# systemctl is only written down.
+# shellcheck disable=SC2329  # called by fu_migrate_system and fu_migrate_user
+systemctl() { printf '%s\n' "$*" >> "$tmp/systemctl"; }
+
 # What plasma-face-unlock wrote is what this writes, under the old name.
 make_old() {
 	sed -i -e "s|^$FU_PAM_MARK\$|$FU_OLD_PAM_MARK|" -e "s|$FU_PAM_WRAPPER_MARK|$FU_OLD_PAM_WRAPPER_MARK|" \
@@ -199,19 +203,21 @@ mkdir -p "$FU_OLD_SYSDIR" "$FU_OLD_STATEDIR/users"
 echo 'Liveness=heavy' > "$FU_OLD_SYSDIR/config"
 echo '{}' > "$FU_OLD_STATEDIR/users/1000.json"
 check "old settings and faces are found" 'fu_migrate_pending'
+: > "$tmp/systemctl"
 fu_migrate_system
 check "the system settings moved" '[[ $(cat "$FU_SYSCONFIG") == Liveness=heavy && ! -e $FU_OLD_SYSDIR ]]'
 check "the faces moved" '[[ $(cat "$FU_STATEDIR/users/1000.json") == "{}" && ! -e $FU_OLD_STATEDIR ]]'
+check "the socket is on, although the old package switched its own off" 'grep -qx "enable --now face-unlockd.socket" "$tmp/systemctl"'
 
 mkdir -p "$FU_OLD_STATEDIR/users"
 echo old > "$FU_OLD_STATEDIR/users/1000.json"
+: > "$tmp/systemctl"
 fu_migrate_system
 check "faces set up under the new name win" '[[ $(cat "$FU_STATEDIR/users/1000.json") == "{}" && ! -e $FU_OLD_STATEDIR ]]'
+check "and the socket is left as it is" '[[ ! -s $tmp/systemctl ]]'
 check "nothing is left over at the end" '! fu_migrate_pending'
 
-# This user's side, with systemctl only written down.
-# shellcheck disable=SC2329  # called by fu_migrate_user
-systemctl() { printf '%s\n' "$*" >> "$tmp/systemctl"; }
+# This user's side.
 FU_XDG_CONFIG="$tmp/home-config"
 FU_CONFDIR="$FU_XDG_CONFIG/face-unlock"
 mkdir -p "$FU_XDG_CONFIG/plasma-face-unlock" "$FU_XDG_CONFIG/systemd/user/graphical-session.target.wants"

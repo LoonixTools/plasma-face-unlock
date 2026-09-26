@@ -48,7 +48,7 @@ _fu_pam_drop_old() {
 # The system settings, the faces, sudo and admin prompts and the daemon's
 # socket, as plasma-face-unlock left them.
 fu_migrate_system() {
-	local service link
+	local service link used=0
 
 	if [[ -d $FU_OLD_SYSDIR ]]; then
 		if [[ -f $FU_OLD_SYSDIR/config && ! -e $FU_SYSCONFIG ]]; then
@@ -63,6 +63,7 @@ fu_migrate_system() {
 			install -d -m 0700 "$FU_STATEDIR" || return 1
 			rm -rf -- "$FU_STATEDIR/users"
 			mv -- "$FU_OLD_STATEDIR/users" "$FU_STATEDIR/users" || return 1
+			used=1
 		fi
 		rm -rf -- "$FU_OLD_STATEDIR"
 	fi
@@ -70,12 +71,19 @@ fu_migrate_system() {
 	for service in "${FU_PAM_SERVICES[@]}"; do
 		_fu_pam_has_old "$service" || continue
 		_fu_pam_drop_old "$service" && fu_pam_enable "$service"
+		used=1
 	done
 
 	link="$(_fu_old_socket_link)"
 	if [[ -L $link ]]; then
 		systemctl disable --now "${FU_OLD_NAME}d.socket" > /dev/null 2>&1 || true
 		rm -f -- "$link"
+		used=1
+	fi
+
+	# The old package switches its socket off when it is removed, mostly before
+	# this runs. So its faces and PAM lines count as the sign that it was used.
+	if (( used )); then
 		systemctl enable --now "$FU_UNIT_SOCKET" > /dev/null 2>&1 || true
 	fi
 	return 0
