@@ -67,12 +67,9 @@ sudo apt update && sudo apt install face-unlock
 
 </details>
 
-Updates come with your system updates. It needs a camera and KDE Plasma 6,
-GNOME, Hyprland or Niri, on Wayland.
-
-- **KDE Plasma:** nothing more to do.
+- **KDE Plasma:** works out of the box.
 - **GNOME:** log out and back in once after installing.
-- **Hyprland and Niri:** the bubble shows on face-unlock's own lock screen. You
+- **Hyprland and Niri:** the bubble only shows on face-unlock's own lock screen. If you want to keep your lockscreen it will show a text on the top of the screen. You
   also need a polkit agent. If none runs, the menu offers to install one.
 
 <details>
